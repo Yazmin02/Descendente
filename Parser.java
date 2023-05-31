@@ -1,12 +1,13 @@
 
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Parser {
 
     private final List<Token> tokens;
-    private Stack<String> stack;
-    private String[][] Tabla;
+    private Stack<String> pila;
+    private String[][] Producciones;
 
 
 
@@ -26,32 +27,49 @@ public class Parser {
 
     public Parser(List<Token> tokens){
         this.tokens = tokens;
-        stack=new Stack<>();
+        pila=new Stack<>();
 
-        Tabla=new String[][]{
-            {"Q", "Q->Select D From T", "","","","","","","" },
-            {"D", "", "","D->distinctP","D->P","","","D->P",""},
-            {"P", "", "","","P->*","","","P->A",""},
-            {"A", "", "","","","","","A->A1A2",""},
-            {"A1", "", "A1->E","","","A1->,A","","",""},
-            {"A2", "", "","","","","","A2->idA3",""}, 
-            {"A3", "", "A3->E","","","A3->E","A3->id","",""},
-            {"T", "", "","","","","","T->T1T2",""},
-            {"T1", "", "","","","T1->,T","","","T1->E"},
-            {"T2", "", "","","","","","T2->idT3",""},
-            {"T3", "", "","","T3->E","","","T3->id","T3->E"},
+        
 
+        Producciones=new String[][]{
+            {"Q", "select D from T"},
+            {"D", "distinctP"},
+            {"D","P"},
+            {"P", "*"},
+            {"P","A"},
+            {"A", "A1A2"},
+            {"A1", ""},
+            {"A1",",A"},
+            {"A2","idA3"}, 
+            {"A3",".id"},
+            {"A3",""},
+            {"T","T2T1"},
+            {"T1",",T"},
+            {"T1",""},
+            {"T2", "idT3"},
+            {"T3","id"},
+            {"T3",""}
         };
     }
-
-    
-
 
     public void parse(){
         i = 0;
         preanalisis = tokens.get(i);
-        Q();
 
+        
+       
+            if (preanalisis.equals(select)) {
+                pila.pop();
+            }
+            else{
+            hayErrores = true;
+            System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba la palabra reservada SELECT.");
+            }
+        
+        
+
+
+        
         if(!hayErrores && !preanalisis.equals(finCadena)){
             System.out.println("Error en la posición " + preanalisis.posicion + ". No se esperaba el token " + preanalisis.tipo);
             
@@ -60,12 +78,14 @@ public class Parser {
             System.out.println("Consulta válida");
         }
 
+
         /*if(!preanalisis.equals(finCadena)){
             System.out.println("Error en la posición " + preanalisis.posicion + ". No se esperaba el token " + preanalisis.tipo);
         }else if(!hayErrores){
             System.out.println("Consulta válida");
         }*/
     }
+
 
     void Q(){
         if(preanalisis.equals(select)){
@@ -90,6 +110,7 @@ public class Parser {
         else if(preanalisis.equals(asterisco) || preanalisis.equals(identificador)){
             P();
         }
+
         else{
             hayErrores = true;
             System.out.println("Error en la posición " + preanalisis.posicion + ". Se esperaba DISTINCT, * o un identificador.");
