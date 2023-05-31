@@ -36,6 +36,7 @@ public class Principal {
 
         Parser parser = new Parser(tokens);
         parser.parse();
+        
     }
 
     /*
