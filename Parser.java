@@ -1,7 +1,6 @@
 
 import java.util.List;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Parser {
 
@@ -27,7 +26,7 @@ public class Parser {
 
     public Parser(List<Token> tokens){
         this.tokens = tokens;
-        pila=new Stack<>();
+        pila=new Stack<>();   
 
         
 
