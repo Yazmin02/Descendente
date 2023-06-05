@@ -1,11 +1,12 @@
 import java.util.List;
 import java.util.Stack;
 
+// select * from tabla
 public class Parser {
 
     static Stack<Token> PilaToken = new Stack<>();
     private final List<Token> tokens;
-
+    // Terminales
     private final Token identificador = new Token(TipoToken.IDENTIFICADOR, "");
     private final Token select = new Token(TipoToken.SELECT, "select");
     private final Token from = new Token(TipoToken.FROM, "from");
@@ -14,17 +15,18 @@ public class Parser {
     private final Token punto = new Token(TipoToken.PUNTO, ".");
     private final Token asterisco = new Token(TipoToken.ASTERISCO, "*");
     private final Token finCadena = new Token(TipoToken.EOF, "");
-    private final Token Q = new Token(TipoToken.AUX, "Q");
-    private final Token D = new Token(TipoToken.AUX, "D");
-    private final Token P = new Token(TipoToken.AUX, "P");
-    private final Token A = new Token(TipoToken.AUX, "A");
-    private final Token A1 = new Token(TipoToken.AUX, "A1");
-    private final Token A2 = new Token(TipoToken.AUX, "A2");
-    private final Token A3 = new Token(TipoToken.AUX, "A3");
-    private final Token T = new Token(TipoToken.AUX, "T");
-    private final Token T1 = new Token(TipoToken.AUX, "T1");
-    private final Token T2 = new Token(TipoToken.AUX, "T2");
-    private final Token T3 = new Token(TipoToken.AUX, "T3");
+    // No terminales
+    private final Token Q = new Token(TipoToken.Q, "Q");
+    private final Token D = new Token(TipoToken.D, "D");
+    private final Token P = new Token(TipoToken.P, "P");
+    private final Token A = new Token(TipoToken.A, "A");
+    private final Token A1 = new Token(TipoToken.A1, "A1");
+    private final Token A2 = new Token(TipoToken.A2, "A2");
+    private final Token A3 = new Token(TipoToken.A3, "A3");
+    private final Token T = new Token(TipoToken.T, "T");
+    private final Token T1 = new Token(TipoToken.T1, "T1");
+    private final Token T2 = new Token(TipoToken.T2, "T2");
+    private final Token T3 = new Token(TipoToken.T3, "T3");
 
     private int i = 0;
     private boolean hayErrores = false;
@@ -44,12 +46,13 @@ public class Parser {
                 System.out.println("Consulta válida");
                 break;
             } else if (PilaToken.peek().equals(preanalisis)) {
-                coincidir(PilaToken.peek());
-            } else if (PilaToken.peek().tipo.equals(TipoToken.AUX)) {
-                ManejoNoTerminales(PilaToken.peek());
+                coincidir(PilaToken.peek()); // Coincide con el token en la cima de la pila
+            } else if (!PilaToken.peek().equals(preanalisis)) {
+                ManejoNoTerminales(PilaToken.peek()); // Realiza el manejo de los no terminales
             } else {
                 System.out.println(
-                        "Error en la posición " + preanalisis.posicion + ". No se esperaba el token " + preanalisis.tipo);
+                        "Error en la posición " + preanalisis.posicion + ". No se esperaba el token "
+                                + preanalisis.tipo);
                 hayErrores = true;
             }
         } while (!hayErrores && PilaToken.peek() != finCadena);
@@ -62,7 +65,7 @@ public class Parser {
     }
 
     void ManejoNoTerminales(Token t) {
-        PilaToken.pop();  // Sacar el símbolo no terminal de la pila
+        PilaToken.pop(); // Sacar el símbolo no terminal de la pila
 
         if (t.equals(Q)) {
             if (preanalisis.equals(select)) {
@@ -126,7 +129,8 @@ public class Parser {
     public void coincidir(Token t) {
         if (t.equals(PilaToken.peek())) {
             PilaToken.pop();
-            preanalisis = tokens.get(i++);
+            i++;
+            preanalisis = tokens.get(i);
         } else {
             System.out.println(
                     "Error en la posición " + preanalisis.posicion + ". Se esperaba el token " + t.tipo);

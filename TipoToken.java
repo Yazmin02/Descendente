@@ -1,4 +1,3 @@
-
 public enum TipoToken {
     IDENTIFICADOR,
 
@@ -6,7 +5,7 @@ public enum TipoToken {
     SELECT, FROM, DISTINCT,
 
     // Caracteres
-    COMA, PUNTO, ASTERISCO,AUX,
+    COMA, PUNTO, ASTERISCO, Q, D, P, A, A1, A2, A3, T, T1, T2, T3,
 
     // Final de cadena
     EOF
